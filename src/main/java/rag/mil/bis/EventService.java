@@ -53,19 +53,6 @@ public class EventService {
     }
 
     public Event getEvent(long id) {
-        Event event1 = new Event();
-        event1.setName("Name");
-        event1.setType("Type");
-        event1.setDescription("Desc");
-        GregorianCalendar c = new GregorianCalendar();
-        c.setTime(new Date());
-        XMLGregorianCalendar date2 = null;
-        try {
-            date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
-        }
-        event1.setDate(date2);
-        return event1;
+        return events.stream().filter(event -> event.getId() == id).findFirst().orElse(null);
     }
 }
