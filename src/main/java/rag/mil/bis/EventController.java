@@ -39,4 +39,11 @@ public class EventController implements EventClient {
         response.setEvent(event);
         return response;
     }
+
+    @Override
+    public GetEventsResponse getEventsForDay(GetEventsForDayRequest request) {
+        GetEventsResponse response = new GetEventsResponse();
+        response.event = eventService.getEventsForDay(request.getDay());
+        return response;
+    }
 }

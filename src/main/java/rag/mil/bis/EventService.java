@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @WebService
@@ -48,11 +50,17 @@ public class EventService {
 
     public Event createEvent(Event event) {
         event.setId(id_seq++);
+        event.getDate().setTimezone(DatatypeConstants.FIELD_UNDEFINED);
         events.add(event);
         return event;
     }
 
     public Event getEvent(long id) {
         return events.stream().filter(event -> event.getId() == id).findFirst().orElse(null);
+    }
+
+    public List<Event> getEventsForDay(XMLGregorianCalendar day) {
+        return events.stream().filter(event -> event.getDate().equals(day)).collect(Collectors.toList());
+
     }
 }

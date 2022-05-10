@@ -8,4 +8,5 @@ public interface EventClient extends Remote {
     GetEventsResponse getEvents();
     EventResponse createEvent(CreateEventRequest request);
     EventResponse getEvent(GetEventRequest request);
+    GetEventsResponse getEventsForDay(GetEventsForDayRequest request);
 }
