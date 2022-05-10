@@ -8,10 +8,9 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -24,27 +23,6 @@ public class EventService {
     private List<Event> events = new ArrayList<>();
 
     public List<Event> getEvents() {
-        List<Event> events = new ArrayList<>();
-        Event event = new Event();
-        event.setName("Name");
-        event.setType("Type");
-        event.setDescription("Desc");
-        GregorianCalendar c = new GregorianCalendar();
-        c.setTime(new Date());
-        XMLGregorianCalendar date2 = null;
-        try {
-            date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
-        }
-        event.setDate(date2);
-        events.add(createEvent(event));
-        Event event1 = new Event();
-        event1.setName("Name");
-        event1.setType("Type");
-        event1.setDescription("Desc");
-        event1.setDate(date2);
-        events.add(createEvent(event1));
        return events;
     }
 
@@ -55,12 +33,44 @@ public class EventService {
         return event;
     }
 
-    public Event getEvent(long id) {
-        return events.stream().filter(event -> event.getId() == id).findFirst().orElse(null);
+    public DetailedEvent getEvent(long id) {
+        Event dEvent = events.stream().filter(event -> event.getId() == id).findFirst().orElse(null);
+        if (dEvent == null) {
+            return null;
+        }
+        DetailedEvent detailedEvent = new DetailedEvent();
+        detailedEvent.setDate(dEvent.getDate());
+        detailedEvent.setId(dEvent.getId());
+        detailedEvent.setDescription(dEvent.getDescription());
+        detailedEvent.setType(dEvent.getType());
+        detailedEvent.setName(dEvent.getName());
+        XMLGregorianCalendar date = dEvent.getDate();
+        LocalDate localDate = LocalDate.of(
+                date.getYear(),
+                date.getMonth(),
+                date.getDay());
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        short weekNumber = (short)localDate.get(weekFields.weekOfWeekBasedYear());
+        detailedEvent.setWeek(weekNumber);
+        detailedEvent.setYear(dEvent.getDate().getYear());
+        detailedEvent.setMonth((short)dEvent.getDate().getMonth());
+        return detailedEvent;
     }
 
     public List<Event> getEventsForDay(XMLGregorianCalendar day) {
         return events.stream().filter(event -> event.getDate().equals(day)).collect(Collectors.toList());
+    }
 
+    public List<Event> getEventsForWeek(short week) {
+        return events.stream().filter(event -> {
+            XMLGregorianCalendar date = event.getDate();
+            LocalDate localDate = LocalDate.of(
+                    date.getYear(),
+                    date.getMonth(),
+                    date.getDay());
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            int weekNumber = localDate.get(weekFields.weekOfWeekBasedYear());
+            return weekNumber == week;
+        }).collect(Collectors.toList());
     }
 }

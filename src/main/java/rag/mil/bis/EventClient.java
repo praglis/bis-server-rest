@@ -7,6 +7,7 @@ import java.rmi.Remote;
 public interface EventClient extends Remote {
     GetEventsResponse getEvents();
     EventResponse createEvent(CreateEventRequest request);
-    EventResponse getEvent(GetEventRequest request);
+    DetailedEventResponse getEvent(GetEventRequest request);
     GetEventsResponse getEventsForDay(GetEventsForDayRequest request);
+    GetEventsResponse getEventsForWeek(GetEventsForWeekRequest request);
 }

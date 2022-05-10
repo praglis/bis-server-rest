@@ -33,9 +33,9 @@ public class EventController implements EventClient {
     }
 
     @Override
-    public EventResponse getEvent(GetEventRequest request) {
-        EventResponse response = new EventResponse();
-        Event event = eventService.getEvent(request.getId());
+    public DetailedEventResponse getEvent(GetEventRequest request) {
+        DetailedEventResponse response = new DetailedEventResponse();
+        DetailedEvent event = eventService.getEvent(request.getId());
         response.setEvent(event);
         return response;
     }
@@ -44,6 +44,13 @@ public class EventController implements EventClient {
     public GetEventsResponse getEventsForDay(GetEventsForDayRequest request) {
         GetEventsResponse response = new GetEventsResponse();
         response.event = eventService.getEventsForDay(request.getDay());
+        return response;
+    }
+
+    @Override
+    public GetEventsResponse getEventsForWeek(GetEventsForWeekRequest request) {
+        GetEventsResponse response = new GetEventsResponse();
+        response.event = eventService.getEventsForWeek(request.getWeek());
         return response;
     }
 }

@@ -38,11 +38,25 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="getEventsForWeekRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="week" type="xs:short"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="eventResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="event" type="tns:event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="detailedEventResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="event" type="tns:detailedEvent"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -64,6 +78,18 @@
             <xs:element name="type" type="xs:string"/>
             <xs:element name="description" type="xs:string"/>
             <xs:element name="date" type="xs:date"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="detailedEvent">
+        <xs:all>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="date" type="xs:date"/>
+            <xs:element name="week" type="xs:short" />
+            <xs:element name="month" type="xs:short" />
+            <xs:element name="year" type="xs:int" />
         </xs:all>
     </xs:complexType>
 </xs:schema>
