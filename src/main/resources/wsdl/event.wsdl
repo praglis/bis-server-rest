@@ -11,7 +11,6 @@
         </xs:schema>
     </wsdl:types>
 
-
     <wsdl:message name="createRequest">
         <wsdl:part name="request" element="tns:createEventRequest"/>
     </wsdl:message>
@@ -119,7 +118,7 @@
 
     <wsdl:service name="EventService">
         <wsdl:port name="EventPort" binding="tns:EventBinding">
-            <soap:address location="http://localhost:8080/api/events"/>
+            <soap:address location="http://localhost:8181/api/events"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

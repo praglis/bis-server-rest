@@ -17,12 +17,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EventService {
-    private static int id_seq = 1;
-
-    private List<Event> events = new ArrayList<>();
+    private final List<Event> events = new ArrayList<>();
+    private int idSequence = 1;
 
     public List<Event> getEvents() {
-        List<Event> events = new ArrayList<>();
         Event event = new Event();
         event.setName("Name");
         event.setType("Type");
@@ -43,11 +41,11 @@ public class EventService {
         event1.setDescription("Desc");
         event1.setDate(date2);
         events.add(createEvent(event1));
-       return events;
+        return events;
     }
 
     public Event createEvent(Event event) {
-        event.setId(id_seq++);
+        event.setId(idSequence++);
         events.add(event);
         return event;
     }
