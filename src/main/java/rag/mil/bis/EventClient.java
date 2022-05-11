@@ -23,5 +23,5 @@ public interface EventClient extends Remote {
     List<Event> getEventsForWeek(short week);
     Event updateEvent(Event event) throws EventNotFoundException, EmptyDataException;
     void deleteEvent(long id);
-    void generatePdf() throws DocumentException;
+    byte[] generatePdf() throws DocumentException;
 }

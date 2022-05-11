@@ -10,7 +10,9 @@ import rag.mil.bis.exception.EventNotFoundException;
 
 import javax.jws.WebService;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.BindingType;
 import javax.xml.ws.soap.MTOM;
+import javax.xml.ws.soap.SOAPBinding;
 import java.io.*;
 import java.util.List;
 
@@ -18,6 +20,8 @@ import java.util.List;
 @Controller
 @WebService(endpointInterface = "rag.mil.bis.EventClient")
 @RequiredArgsConstructor
+@MTOM
+@BindingType(value = SOAPBinding.SOAP11HTTP_MTOM_BINDING)
 public class EventController implements EventClient {
     @Autowired
     private EventService eventService;
@@ -57,8 +61,7 @@ public class EventController implements EventClient {
     }
 
     @Override
-    @MTOM
-    public void generatePdf() throws DocumentException {
-        eventService.generatePdf();
+    public byte[] generatePdf() throws DocumentException {
+        return eventService.generatePdf();
     }
 }

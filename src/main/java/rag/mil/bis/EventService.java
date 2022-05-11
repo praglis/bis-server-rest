@@ -102,7 +102,7 @@ public class EventService {
         events.removeIf(event -> event.getId() == id);
     }
 
-    public void generatePdf() throws DocumentException {
+    public byte[] generatePdf() throws DocumentException {
         Document document = new Document();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, baos);
@@ -115,14 +115,7 @@ public class EventService {
 
         document.add(table);
         document.close();
-        File outputFile = new File("tmp.pdf");
-        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-            outputStream.write(baos.toByteArray());
-           // return outputStream;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //return null;
+        return baos.toByteArray();
     }
 
     private void addTableHeader(PdfPTable table) {
@@ -138,9 +131,11 @@ public class EventService {
 
     private void addRows(PdfPTable table) {
         for(Event event: events) {
-            table.addCell(event.getId() + ", " + event.getName()
-                    + ", " + event.getType() + ", " + event.getDate()
-                    + ", " + event.getDescription());
+            table.addCell(event.getId()+ "");
+            table.addCell(event.getName());
+            table.addCell(event.getType());
+            table.addCell(event.getDate() + "");
+            table.addCell(event.getDescription());
         }
     }
 }
