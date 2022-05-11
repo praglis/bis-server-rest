@@ -3,10 +3,6 @@ package rag.mil.bis;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import javax.jws.WebService;
 
@@ -20,7 +16,7 @@ public class EventController implements EventClient {
 
     public GetEventsResponse getEvents() {
         GetEventsResponse response = new GetEventsResponse();
-        response.event = eventService.getEvents();
+        response.getEvent().addAll(eventService.getEvents());
         return response;
     }
 

@@ -18,16 +18,15 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EventService {
-    private static int id_seq = 1;
-
-    private List<Event> events = new ArrayList<>();
+    private final List<Event> events = new ArrayList<>();
+    private int idSequence = 1;
 
     public List<Event> getEvents() {
        return events;
     }
 
     public Event createEvent(Event event) {
-        event.setId(id_seq++);
+        event.setId(idSequence++);
         event.getDate().setTimezone(DatatypeConstants.FIELD_UNDEFINED);
         events.add(event);
         return event;

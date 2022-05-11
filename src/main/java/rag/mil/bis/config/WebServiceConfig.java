@@ -1,4 +1,4 @@
-package rag.mil.bis;
+package rag.mil.bis.config;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.cxf.Bus;
@@ -14,6 +14,8 @@ import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
+import rag.mil.bis.EventController;
+import rag.mil.bis.intercepting.HandlerInterceptor;
 
 
 @EnableWs
@@ -46,6 +48,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     public EndpointImpl endpoint(EventController eventController) {
         Bus bus = applicationContext.getBean(SpringBus.class);
         EndpointImpl eventsEndpoint = new EndpointImpl(bus, eventController);
+        eventsEndpoint.getOutInterceptors().add(new HandlerInterceptor());
         eventsEndpoint.publish("/events");
         return eventsEndpoint;
     }
