@@ -6,7 +6,7 @@
     <xs:element name="createEventRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="event" type="tns:event"/>
+                <xs:element name="event" type="tns:eventToCreate"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -29,6 +29,10 @@
             <xs:sequence>
                 <xs:element name="id" type="xs:long"/>
             </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="deleteEventResponse">
+        <xs:complexType>
         </xs:complexType>
     </xs:element>
     <xs:element name="getEventsForDayRequest">
@@ -74,6 +78,14 @@
     <xs:complexType name="event">
         <xs:all>
             <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="date" type="xs:date"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="eventToCreate">
+        <xs:all>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="type" type="xs:string"/>
             <xs:element name="description" type="xs:string"/>
