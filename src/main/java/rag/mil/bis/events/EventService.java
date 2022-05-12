@@ -1,4 +1,4 @@
-package rag.mil.bis;
+package rag.mil.bis.events;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -15,10 +15,12 @@ import rag.mil.bis.exception.EventNotFoundException;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

@@ -1,27 +1,19 @@
-package rag.mil.bis;
+package rag.mil.bis.events;
 
-import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Controller;
 import rag.mil.bis.exception.EmptyDataException;
 import rag.mil.bis.exception.EventNotFoundException;
 
 import javax.jws.WebService;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.ws.BindingType;
-import javax.xml.ws.soap.MTOM;
-import javax.xml.ws.soap.SOAPBinding;
-import java.io.*;
 import java.util.List;
 
 
 @Controller
-@WebService(endpointInterface = "rag.mil.bis.EventClient")
+@WebService(endpointInterface = "rag.mil.bis.events.EventClient")
 @RequiredArgsConstructor
-@MTOM
-@BindingType(value = SOAPBinding.SOAP11HTTP_MTOM_BINDING)
 public class EventController implements EventClient {
     @Autowired
     private EventService eventService;
@@ -58,10 +50,5 @@ public class EventController implements EventClient {
     @Override
     public void deleteEvent(long id) {
         eventService.deleteEvent(id);
-    }
-
-    @Override
-    public byte[] generatePdf() throws DocumentException {
-        return eventService.generatePdf();
     }
 }

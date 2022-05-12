@@ -14,8 +14,9 @@ import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
-import rag.mil.bis.EventController;
+import rag.mil.bis.events.EventController;
 import rag.mil.bis.intercepting.HandlerInterceptor;
+import rag.mil.bis.mtom.MtomController;
 
 
 @EnableWs
@@ -51,5 +52,14 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         eventsEndpoint.getOutInterceptors().add(new HandlerInterceptor());
         eventsEndpoint.publish("/events");
         return eventsEndpoint;
+    }
+
+    @Bean
+    public EndpointImpl mtomEndpoint(MtomController mtomController) {
+        Bus bus = applicationContext.getBean(SpringBus.class);
+        EndpointImpl mtomEndpoint = new EndpointImpl(bus, mtomController);
+        mtomEndpoint.getOutInterceptors().add(new HandlerInterceptor());
+        mtomEndpoint.publish("/mtom");
+        return mtomEndpoint;
     }
 }

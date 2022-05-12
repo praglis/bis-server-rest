@@ -6,23 +6,19 @@
 //
 
 
-package rag.mil.bis;
+package rag.mil.bis.events;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * <p>Java class for detailedEvent complex type.
+ * <p>Java class for event complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="detailedEvent">
+ * &lt;complexType name="event">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;all>
@@ -31,9 +27,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="date" type="{http://www.w3.org/2001/XMLSchema}date"/>
- *         &lt;element name="week" type="{http://www.w3.org/2001/XMLSchema}short"/>
- *         &lt;element name="month" type="{http://www.w3.org/2001/XMLSchema}short"/>
- *         &lt;element name="year" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/all>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,10 +36,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "detailedEvent", propOrder = {
+@XmlType(name = "event", propOrder = {
 
 })
-public class DetailedEvent {
+public class Event {
 
     protected long id;
     @XmlElement(required = true)
@@ -58,9 +51,6 @@ public class DetailedEvent {
     @XmlElement(required = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar date;
-    protected short week;
-    protected short month;
-    protected int year;
 
     /**
      * Gets the value of the id property.
@@ -172,54 +162,6 @@ public class DetailedEvent {
      */
     public void setDate(XMLGregorianCalendar value) {
         this.date = value;
-    }
-
-    /**
-     * Gets the value of the week property.
-     * 
-     */
-    public short getWeek() {
-        return week;
-    }
-
-    /**
-     * Sets the value of the week property.
-     * 
-     */
-    public void setWeek(short value) {
-        this.week = value;
-    }
-
-    /**
-     * Gets the value of the month property.
-     * 
-     */
-    public short getMonth() {
-        return month;
-    }
-
-    /**
-     * Sets the value of the month property.
-     * 
-     */
-    public void setMonth(short value) {
-        this.month = value;
-    }
-
-    /**
-     * Gets the value of the year property.
-     * 
-     */
-    public int getYear() {
-        return year;
-    }
-
-    /**
-     * Sets the value of the year property.
-     * 
-     */
-    public void setYear(int value) {
-        this.year = value;
     }
 
 }
