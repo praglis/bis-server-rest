@@ -1,17 +1,26 @@
 package rag.mil.bis;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import rag.mil.bis.exception.EmptyDataException;
+import rag.mil.bis.exception.EventNotFoundException;
 
 import javax.jws.WebService;
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @WebService
@@ -25,18 +34,20 @@ public class EventService {
        return events;
     }
 
-    public Event createEvent(Event event) {
+    public Event createEvent(EventToCreate eventToCreate) {
+        Event event = new Event();
         event.setId(idSequence++);
-        event.getDate().setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+        eventToCreate.getDate().setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+        event.setType(eventToCreate.getType());
+        event.setName(eventToCreate.getName());
+        event.setDescription(eventToCreate.getDescription());
+        event.setDate(eventToCreate.getDate());
         events.add(event);
         return event;
     }
 
-    public DetailedEvent getEvent(long id) {
-        Event dEvent = events.stream().filter(event -> event.getId() == id).findFirst().orElse(null);
-        if (dEvent == null) {
-            return null;
-        }
+    public DetailedEvent getEvent(long id) throws EventNotFoundException {
+        Event dEvent = events.stream().filter(event -> event.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
         DetailedEvent detailedEvent = new DetailedEvent();
         detailedEvent.setDate(dEvent.getDate());
         detailedEvent.setId(dEvent.getId());
@@ -72,4 +83,59 @@ public class EventService {
             return weekNumber == week;
         }).collect(Collectors.toList());
     }
+
+    public Event updateEvent(Event event) throws EmptyDataException, EventNotFoundException {
+        long id = event.getId();
+        if(id == 0) {
+            throw new EmptyDataException("Id");
+        }
+        Event uEvent = events.stream().filter(e -> e.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
+        uEvent.setDate(event.getDate());
+        uEvent.setDescription(event.getDescription());
+        uEvent.setName(event.getDescription());
+        uEvent.setType(event.getType());
+        return event;
+    }
+
+    public void deleteEvent(long id) {
+        events.removeIf(event -> event.getId() == id);
+    }
+
+    public byte[] generatePdf() throws DocumentException {
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, baos);
+
+        document.open();
+
+        PdfPTable table = new PdfPTable(5);
+        addTableHeader(table);
+        addRows(table);
+
+        document.add(table);
+        document.close();
+        return baos.toByteArray();
+    }
+
+    private void addTableHeader(PdfPTable table) {
+        Stream.of("Id", "Name", "Type", "Date", "Description")
+                .forEach(columnTitle -> {
+                    PdfPCell header = new PdfPCell();
+                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    header.setBorderWidth(2);
+                    header.setPhrase(new Phrase(columnTitle));
+                    table.addCell(header);
+                });
+    }
+
+    private void addRows(PdfPTable table) {
+        for(Event event: events) {
+            table.addCell(event.getId()+ "");
+            table.addCell(event.getName());
+            table.addCell(event.getType());
+            table.addCell(event.getDate() + "");
+            table.addCell(event.getDescription());
+        }
+    }
 }
+

@@ -1,52 +1,67 @@
 package rag.mil.bis;
 
+import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Controller;
+import rag.mil.bis.exception.EmptyDataException;
+import rag.mil.bis.exception.EventNotFoundException;
 
 import javax.jws.WebService;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.BindingType;
+import javax.xml.ws.soap.MTOM;
+import javax.xml.ws.soap.SOAPBinding;
+import java.io.*;
+import java.util.List;
 
 
 @Controller
 @WebService(endpointInterface = "rag.mil.bis.EventClient")
 @RequiredArgsConstructor
+@MTOM
+@BindingType(value = SOAPBinding.SOAP11HTTP_MTOM_BINDING)
 public class EventController implements EventClient {
     @Autowired
     private EventService eventService;
 
-    public GetEventsResponse getEvents() {
-        GetEventsResponse response = new GetEventsResponse();
-        response.getEvent().addAll(eventService.getEvents());
-        return response;
+    public List<Event> getEvents() {
+        return eventService.getEvents();
     }
 
     @Override
-    public EventResponse createEvent(CreateEventRequest request) {
-        EventResponse response = new EventResponse();
-        Event event = eventService.createEvent(request.getEvent());
-        response.setEvent(event);
-        return response;
+    public Event createEvent(EventToCreate event) {
+        return eventService.createEvent(event);
     }
 
     @Override
-    public DetailedEventResponse getEvent(GetEventRequest request) {
-        DetailedEventResponse response = new DetailedEventResponse();
-        DetailedEvent event = eventService.getEvent(request.getId());
-        response.setEvent(event);
-        return response;
+    public DetailedEvent getEvent(long id) throws EventNotFoundException {
+        return eventService.getEvent(id);
     }
 
     @Override
-    public GetEventsResponse getEventsForDay(GetEventsForDayRequest request) {
-        GetEventsResponse response = new GetEventsResponse();
-        response.event = eventService.getEventsForDay(request.getDay());
-        return response;
+    public List<Event> getEventsForDay(XMLGregorianCalendar day) {
+        return eventService.getEventsForDay(day);
     }
 
     @Override
-    public GetEventsResponse getEventsForWeek(GetEventsForWeekRequest request) {
-        GetEventsResponse response = new GetEventsResponse();
-        response.event = eventService.getEventsForWeek(request.getWeek());
-        return response;
+    public List<Event> getEventsForWeek(short week) {
+        return eventService.getEventsForWeek(week);
+    }
+
+    @Override
+    public Event updateEvent(Event event) throws EventNotFoundException, EmptyDataException {
+        return eventService.updateEvent(event);
+    }
+
+    @Override
+    public void deleteEvent(long id) {
+        eventService.deleteEvent(id);
+    }
+
+    @Override
+    public byte[] generatePdf() throws DocumentException {
+        return eventService.generatePdf();
     }
 }
