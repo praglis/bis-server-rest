@@ -10,16 +10,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class HandlerInterceptor extends AbstractSoapInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(HandlerInterceptor.class);
+public class SoapResponseInterceptor extends AbstractSoapInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(SoapResponseInterceptor.class);
 
-    public HandlerInterceptor() {
+    public SoapResponseInterceptor() {
         super(Phase.USER_LOGICAL);
     }
 
     @Override
     public void handleMessage(SoapMessage message) throws Fault {
-        logger.info("Handling soap message by INTERCEPTOR...");
+        logger.info("--- Started handling SOAP response ---");
+
         try {
 //            request headers
 //            Map<String, List<String>> map = (Map<String, List<String>>) message.get(MessageContext.HTTP_REQUEST_HEADERS);
@@ -29,19 +30,14 @@ public class HandlerInterceptor extends AbstractSoapInterceptor {
 
             List<Header> headers = message.getHeaders();
             if (headers != null) {
-                logHeaders("Intercepted headers: ", headers);
+                HeaderUtils.logHeaders("SOAP response headers before handling: ", headers, logger);
                 headers.add(new BisHeader("Header-From-Interceptor-Name", "header from interceptor value"));
-                logHeaders("Headers after handling: ", headers);
+                HeaderUtils.logHeaders("SOAP response headers after handling: ", headers, logger);
             } else logger.warn("No headers object");
 
+            logger.info("--- Completed handling SOAP response ---");
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void logHeaders(String msg, List<Header> headers) {
-        logger.info(msg);
-        //noinspection RedundantCast
-        headers.forEach(header -> logger.info(((BisHeader) header).toString()));
     }
 }
