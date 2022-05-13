@@ -7,6 +7,5 @@ import java.rmi.Remote;
 
 @WebService
 public interface MtomClient extends Remote {
-    byte[] generatePdf() throws DocumentException;
 }
 
