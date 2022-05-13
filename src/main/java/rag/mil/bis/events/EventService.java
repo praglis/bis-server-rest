@@ -33,7 +33,7 @@ public class EventService {
     private int idSequence = 1;
 
     public List<Event> getEvents() {
-       return events;
+        return events;
     }
 
     public Event createEvent(EventToCreate eventToCreate) {
@@ -62,10 +62,10 @@ public class EventService {
                 date.getMonth(),
                 date.getDay());
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        short weekNumber = (short)localDate.get(weekFields.weekOfWeekBasedYear());
+        short weekNumber = (short) localDate.get(weekFields.weekOfWeekBasedYear());
         detailedEvent.setWeek(weekNumber);
         detailedEvent.setYear(dEvent.getDate().getYear());
-        detailedEvent.setMonth((short)dEvent.getDate().getMonth());
+        detailedEvent.setMonth((short) dEvent.getDate().getMonth());
         return detailedEvent;
     }
 
@@ -88,13 +88,13 @@ public class EventService {
 
     public Event updateEvent(Event event) throws EmptyDataException, EventNotFoundException {
         long id = event.getId();
-        if(id == 0) {
+        if (id == 0) {
             throw new EmptyDataException("Id");
         }
         Event uEvent = events.stream().filter(e -> e.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
         uEvent.setDate(event.getDate());
         uEvent.setDescription(event.getDescription());
-        uEvent.setName(event.getDescription());
+        uEvent.setName(event.getName());
         uEvent.setType(event.getType());
         return event;
     }
@@ -131,8 +131,8 @@ public class EventService {
     }
 
     private void addRows(PdfPTable table) {
-        for(Event event: events) {
-            table.addCell(event.getId()+ "");
+        for (Event event : events) {
+            table.addCell(event.getId() + "");
             table.addCell(event.getName());
             table.addCell(event.getType());
             table.addCell(event.getDate() + "");
