@@ -1,5 +1,6 @@
 package rag.mil.bis.events;
 
+import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,5 +51,10 @@ public class EventController implements EventClient {
     @Override
     public void deleteEvent(long id) {
         eventService.deleteEvent(id);
+    }
+
+    @Override
+    public byte[] generatePdf() throws DocumentException {
+        return eventService.generatePdf();
     }
 }

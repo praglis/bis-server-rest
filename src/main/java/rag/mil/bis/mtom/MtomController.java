@@ -21,8 +21,5 @@ public class MtomController implements MtomClient {
     @Autowired
     private EventService eventService;
 
-    @Override
-    public byte[] generatePdf() throws DocumentException {
-        return eventService.generatePdf();
-    }
+
 }

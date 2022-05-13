@@ -94,7 +94,7 @@ public class EventService {
         Event uEvent = events.stream().filter(e -> e.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
         uEvent.setDate(event.getDate());
         uEvent.setDescription(event.getDescription());
-        uEvent.setName(event.getDescription());
+        uEvent.setName(event.getName());
         uEvent.setType(event.getType());
         return event;
     }

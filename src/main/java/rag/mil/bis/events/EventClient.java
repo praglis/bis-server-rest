@@ -1,5 +1,6 @@
 package rag.mil.bis.events;
 
+import com.itextpdf.text.DocumentException;
 import rag.mil.bis.exception.EmptyDataException;
 import rag.mil.bis.exception.EventNotFoundException;
 
@@ -23,5 +24,7 @@ public interface EventClient extends Remote {
     Event updateEvent(Event event) throws EventNotFoundException, EmptyDataException;
 
     void deleteEvent(long id);
+
+    byte[] generatePdf() throws DocumentException;
 }
 

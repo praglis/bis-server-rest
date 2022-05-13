@@ -14,7 +14,7 @@ public class HandlerInterceptor extends AbstractSoapInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(HandlerInterceptor.class);
 
     public HandlerInterceptor() {
-        super(Phase.USER_LOGICAL);
+        super(Phase.USER_LOGICAL_ENDING);
     }
 
     @Override
