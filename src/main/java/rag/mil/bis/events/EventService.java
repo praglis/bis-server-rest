@@ -73,17 +73,19 @@ public class EventService {
         return events.stream().filter(event -> event.getDate().equals(day)).collect(Collectors.toList());
     }
 
-    public List<Event> getEventsForWeek(short week) {
-        return events.stream().filter(event -> {
-            XMLGregorianCalendar date = event.getDate();
-            LocalDate localDate = LocalDate.of(
-                    date.getYear(),
-                    date.getMonth(),
-                    date.getDay());
-            WeekFields weekFields = WeekFields.of(Locale.getDefault());
-            int weekNumber = localDate.get(weekFields.weekOfWeekBasedYear());
-            return weekNumber == week;
-        }).collect(Collectors.toList());
+    public List<Event> getEventsForWeek(YearWeek yearWeek) {
+        return events.stream()
+                .filter(event -> {
+                    XMLGregorianCalendar date = event.getDate();
+                    LocalDate localDate = LocalDate.of(
+                            date.getYear(),
+                            date.getMonth(),
+                            date.getDay()
+                    );
+                    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+                    int weekNumber = localDate.get(weekFields.weekOfWeekBasedYear());
+                    return localDate.getYear() == yearWeek.getYear() && weekNumber == yearWeek.getWeek();
+                }).collect(Collectors.toList());
     }
 
     public Event updateEvent(Event event) throws EmptyDataException, EventNotFoundException {

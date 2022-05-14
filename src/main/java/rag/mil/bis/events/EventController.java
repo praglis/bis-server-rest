@@ -39,8 +39,8 @@ public class EventController implements EventClient {
     }
 
     @Override
-    public List<Event> getEventsForWeek(short week) {
-        return eventService.getEventsForWeek(week);
+    public List<Event> getEventsForWeek(YearWeek yearWeekDto) {
+        return eventService.getEventsForWeek(yearWeekDto);
     }
 
     @Override
