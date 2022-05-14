@@ -19,7 +19,7 @@ public interface EventClient extends Remote {
 
     List<Event> getEventsForDay(XMLGregorianCalendar day);
 
-    List<Event> getEventsForWeek(short week);
+    List<Event> getEventsForWeek(YearWeek yearWeekDto);
 
     Event updateEvent(Event event) throws EventNotFoundException, EmptyDataException;
 
