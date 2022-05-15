@@ -15,16 +15,16 @@ import java.util.Optional;
 
 public class SoapRequestInterceptor extends AbstractSoapInterceptor {
     public static final String WSS_USERNAME_HEADER = "WS-Security-Username";
-    public static final String WSS_PASSWORD_HEADER = "WS-Security-Password";
     public static final String BIS_CLIENT_USERNAME = "BIS-client";
-    public static final String BIS_CLIENT_PASSWORD = "Runner789&*";
+    public static final String WSS_PASSWORD_HEADER = "WS-Security-Password";
+    public static final String BIS_CLIENT_PASSWORD = "Runner78910";
     private static final Logger logger = LoggerFactory.getLogger(SoapRequestInterceptor.class);
-    private static final String WRONG_PASSWORD_MSG = "Wrong password.";
     private static final String UNKNOWN_USER_MSG = "Unknown user.";
+    private static final String WRONG_PASSWORD_MSG = "Wrong password.";
 
 
     public SoapRequestInterceptor() {
-        super(Phase.USER_LOGICAL);
+        super(Phase.PRE_PROTOCOL);
     }
 
     @Override
@@ -47,8 +47,10 @@ public class SoapRequestInterceptor extends AbstractSoapInterceptor {
                 .filter(header -> header.getName().getLocalPart().equals(WSS_PASSWORD_HEADER))
                 .findFirst();
 
-        if (usernameHeader.isPresent() && usernameHeader.get().getObject().equals(BIS_CLIENT_USERNAME)) {
-            if (passwordHeader.isPresent() && passwordHeader.get().getObject().equals(BIS_CLIENT_PASSWORD)) {
+        if (usernameHeader.isPresent() &&
+                new BisHeader(usernameHeader.get()).getValue().equals(BIS_CLIENT_USERNAME)) {
+            if (passwordHeader.isPresent() &&
+                    new BisHeader(passwordHeader.get()).getValue().equals(BIS_CLIENT_PASSWORD)) {
                 logger.info(String.format("Authenticated user: %s", usernameHeader.get().getObject()));
             } else throw new SecurityFault(WRONG_PASSWORD_MSG);
         } else throw new SecurityFault(UNKNOWN_USER_MSG);

@@ -12,7 +12,7 @@ public interface HeaderUtils {
     static void logHeaders(String msg, List<Header> headers, Logger logger) {
         logger.info(msg);
         //noinspection RedundantCast
-        headers.forEach(header -> logger.info(((BisHeader) header).toString()));
+        headers.forEach(header -> logger.info(new BisHeader(header).toString()));
     }
 
     static void logHeaders(String msg, Enumeration<String> headers, Logger logger) {
