@@ -15,10 +15,13 @@ import rag.mil.bis.exception.EventNotFoundException;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -30,6 +33,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class EventService {
     private final List<Event> events = new ArrayList<>();
+    private final HashMap<Long, File> images = new HashMap<>();
     private int idSequence = 1;
 
     public List<Event> getEvents() {
@@ -103,6 +107,7 @@ public class EventService {
 
     public void deleteEvent(long id) {
         events.removeIf(event -> event.getId() == id);
+        images.remove(id);
     }
 
     public byte[] generatePdf() throws DocumentException {
@@ -140,6 +145,14 @@ public class EventService {
             table.addCell(event.getDate() + "");
             table.addCell(event.getDescription());
         }
+    }
+
+    public File getImage(long id) {
+        return images.get(id);
+    }
+
+    public void postImage(File image, long id) {
+        images.put(id, image);
     }
 }
 
