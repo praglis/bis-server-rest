@@ -34,13 +34,6 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean(servlet, "/soap/*");
     }
 
-    @Bean(name = "events")
-    public SimpleWsdl11Definition clientWsdl11Definition() {
-        SimpleWsdl11Definition wsdl11Definition = new SimpleWsdl11Definition();
-        wsdl11Definition.setWsdl(new ClassPathResource("/wsdl/event.wsdl"));
-        return wsdl11Definition;
-    }
-
     @Bean
     public ServletRegistrationBean<CXFServlet> disServlet() {
         return new ServletRegistrationBean<>(new CXFServlet(), "/soap-api/*");
