@@ -1,6 +1,7 @@
 package rag.mil.bis;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import rag.mil.bis.exception.IdInconsistencyException;
 import rag.mil.bis.model.EventDto;
@@ -35,7 +36,7 @@ public class EventController {
     }
 
     @GetMapping("/day/{day}")
-    public List<EventDto> getEventsForDay(@PathVariable LocalDate day) {
+    public List<EventDto> getEventsForDay(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate day) {
         return eventService.getEventsForDay(day);
     }
 
