@@ -96,8 +96,10 @@ public class EventService {
         return event;
     }
 
-    public void deleteEvent(long id) {
-        events.removeIf(event -> event.getId() == id);
+    public EventDto deleteEvent(long id) {
+        EventDto eventToDelete = findEvent(id);
+        events.remove(eventToDelete);
+        return eventToDelete;
     }
 
     public byte[] generatePdf() {

@@ -59,8 +59,8 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEvent(@Range(message = ID_SHOULD_NOT_BE_NEGATIVE_MSG) @PathVariable long id) {
-        eventService.deleteEvent(id);
+    public EventDto deleteEvent(@Range(message = ID_SHOULD_NOT_BE_NEGATIVE_MSG) @PathVariable long id) {
+        return eventService.deleteEvent(id);
     }
 
     @GetMapping("/pdf")
