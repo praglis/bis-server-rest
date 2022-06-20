@@ -44,6 +44,7 @@ public class EventService {
         event.setName(eventToCreate.getName());
         event.setDescription(eventToCreate.getDescription());
         event.setDate(eventToCreate.getDate());
+        event.setPhoto(eventToCreate.getPhoto());
         events.add(event);
         return event;
     }
@@ -56,6 +57,7 @@ public class EventService {
         eventDto.setDescription(dEvent.getDescription());
         eventDto.setType(dEvent.getType());
         eventDto.setName(dEvent.getName());
+        eventDto.setPhoto(dEvent.getPhoto());
         return eventDto;
     }
 
@@ -81,6 +83,7 @@ public class EventService {
         uEvent.setDescription(event.getDescription());
         uEvent.setName(event.getName());
         uEvent.setType(event.getType());
+        uEvent.setPhoto(event.getPhoto());
         return event;
     }
 
