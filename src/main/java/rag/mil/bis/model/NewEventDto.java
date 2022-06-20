@@ -25,4 +25,6 @@ public class NewEventDto {
 
     @NotNull
     private LocalDate date;
+
+    private String photo;
 }
