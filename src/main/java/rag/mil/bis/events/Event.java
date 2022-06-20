@@ -8,6 +8,7 @@
 
 package rag.mil.bis.events;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -28,5 +29,6 @@ public class Event {
     private String description;
 
     @NotBlank
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 }

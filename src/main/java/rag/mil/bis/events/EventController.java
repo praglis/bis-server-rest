@@ -29,7 +29,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public DetailedEvent getEvent(@RequestParam long id) throws EventNotFoundException {
+    public DetailedEvent getEvent(@PathVariable long id) throws EventNotFoundException {
         return eventService.getEvent(id);
     }
 
