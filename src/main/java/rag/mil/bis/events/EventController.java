@@ -2,17 +2,16 @@ package rag.mil.bis.events;
 
 import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import rag.mil.bis.exception.EventNotFoundException;
 import rag.mil.bis.exception.IdInconsistencyException;
 
 import javax.validation.Valid;
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
 import java.util.List;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:8080", allowCredentials = "true")
 @RequestMapping("/api/events")
@@ -25,7 +24,7 @@ public class EventController {
     }
 
     @PostMapping
-    public Event createEvent(@Valid NewEventDto newEventDto) {
+    public Event createEvent(NewEventDto newEventDto) {
         return eventService.createEvent(newEventDto);
     }
 
@@ -35,7 +34,7 @@ public class EventController {
     }
 
     @GetMapping("/day/{day}")
-    public List<Event> getEventsForDay(@PathVariable XMLGregorianCalendar day) {
+    public List<Event> getEventsForDay(@PathVariable LocalDate day) {
         return eventService.getEventsForDay(day);
     }
 

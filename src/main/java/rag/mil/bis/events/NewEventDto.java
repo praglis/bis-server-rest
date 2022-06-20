@@ -12,7 +12,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
 
 @Data
 public class NewEventDto {
@@ -24,5 +24,5 @@ public class NewEventDto {
     private String description;
 
     @NotNull
-    private XMLGregorianCalendar date;
+    private LocalDate date;
 }

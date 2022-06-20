@@ -8,214 +8,35 @@
 
 package rag.mil.bis.events;
 
-import javax.xml.bind.annotation.*;
-import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDate;
 
-/**
- * <p>Java class for detailedEvent complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType name="detailedEvent">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;all>
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="date" type="{http://www.w3.org/2001/XMLSchema}date"/>
- *         &lt;element name="week" type="{http://www.w3.org/2001/XMLSchema}short"/>
- *         &lt;element name="month" type="{http://www.w3.org/2001/XMLSchema}short"/>
- *         &lt;element name="year" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *       &lt;/all>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- * 
- * 
- */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "detailedEvent", propOrder = {
-
-})
+@Data
 public class DetailedEvent {
+    @PositiveOrZero
+    private long id;
 
-    protected long id;
-    @XmlElement(required = true)
-    protected String name;
-    @XmlElement(required = true)
-    protected String type;
-    @XmlElement(required = true)
-    protected String description;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar date;
-    protected short week;
-    protected short month;
-    protected int year;
+    @NotBlank
+    private String name;
 
-    /**
-     * Gets the value of the id property.
-     * 
-     */
-    public long getId() {
-        return id;
-    }
+    private String type;
 
-    /**
-     * Sets the value of the id property.
-     * 
-     */
-    public void setId(long value) {
-        this.id = value;
-    }
+    private String description;
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
+    @NotNull
+    private LocalDate date;
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+    @NotNull
+    private short week;
 
-    /**
-     * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getType() {
-        return type;
-    }
+    @NotNull
+    private short month;
 
-    /**
-     * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setType(String value) {
-        this.type = value;
-    }
-
-    /**
-     * Gets the value of the description property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the value of the description property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDescription(String value) {
-        this.description = value;
-    }
-
-    /**
-     * Gets the value of the date property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getDate() {
-        return date;
-    }
-
-    /**
-     * Sets the value of the date property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setDate(XMLGregorianCalendar value) {
-        this.date = value;
-    }
-
-    /**
-     * Gets the value of the week property.
-     * 
-     */
-    public short getWeek() {
-        return week;
-    }
-
-    /**
-     * Sets the value of the week property.
-     * 
-     */
-    public void setWeek(short value) {
-        this.week = value;
-    }
-
-    /**
-     * Gets the value of the month property.
-     * 
-     */
-    public short getMonth() {
-        return month;
-    }
-
-    /**
-     * Sets the value of the month property.
-     * 
-     */
-    public void setMonth(short value) {
-        this.month = value;
-    }
-
-    /**
-     * Gets the value of the year property.
-     * 
-     */
-    public int getYear() {
-        return year;
-    }
-
-    /**
-     * Sets the value of the year property.
-     * 
-     */
-    public void setYear(int value) {
-        this.year = value;
-    }
+    @NotNull
+    private int year;
 
 }

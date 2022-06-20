@@ -13,8 +13,6 @@ import rag.mil.bis.exception.EmptyDataException;
 import rag.mil.bis.exception.EventNotFoundException;
 
 import javax.jws.WebService;
-import javax.xml.datatype.DatatypeConstants;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.time.LocalDate;
@@ -42,7 +40,6 @@ public class EventService {
     public Event createEvent(NewEventDto eventToCreate) {
         Event event = new Event();
         event.setId(idSequence++);
-        eventToCreate.getDate().setTimezone(DatatypeConstants.FIELD_UNDEFINED);
         event.setType(eventToCreate.getType());
         event.setName(eventToCreate.getName());
         event.setDescription(eventToCreate.getDescription());
@@ -59,35 +56,27 @@ public class EventService {
         detailedEvent.setDescription(dEvent.getDescription());
         detailedEvent.setType(dEvent.getType());
         detailedEvent.setName(dEvent.getName());
-        XMLGregorianCalendar date = dEvent.getDate();
-        LocalDate localDate = LocalDate.of(
-                date.getYear(),
-                date.getMonth(),
-                date.getDay());
+        LocalDate date = dEvent.getDate();
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        short weekNumber = (short) localDate.get(weekFields.weekOfWeekBasedYear());
+        short weekNumber = (short) date.get(weekFields.weekOfWeekBasedYear());
         detailedEvent.setWeek(weekNumber);
         detailedEvent.setYear(dEvent.getDate().getYear());
-        detailedEvent.setMonth((short) dEvent.getDate().getMonth());
+        detailedEvent.setMonth((short) dEvent.getDate().getMonth().getValue());
         return detailedEvent;
     }
 
-    public List<Event> getEventsForDay(XMLGregorianCalendar day) {
-        return events.stream().filter(event -> event.getDate().equals(day)).collect(Collectors.toList());
+    public List<Event> getEventsForDay(LocalDate day) {
+        return events.stream().filter(event -> event.getDate().isEqual(day)).collect(Collectors.toList());
     }
 
     public List<Event> getEventsForWeek(YearWeek yearWeek) {
         return events.stream()
                 .filter(event -> {
-                    XMLGregorianCalendar date = event.getDate();
-                    LocalDate localDate = LocalDate.of(
-                            date.getYear(),
-                            date.getMonth(),
-                            date.getDay()
-                    );
+                    LocalDate date = event.getDate();
+
                     WeekFields weekFields = WeekFields.of(Locale.getDefault());
-                    int weekNumber = localDate.get(weekFields.weekOfWeekBasedYear());
-                    return localDate.getYear() == yearWeek.getYear() && weekNumber == yearWeek.getWeek();
+                    int weekNumber = date.get(weekFields.weekOfWeekBasedYear());
+                    return date.getYear() == yearWeek.getYear() && weekNumber == yearWeek.getWeek();
                 }).collect(Collectors.toList());
     }
 
@@ -148,7 +137,7 @@ public class EventService {
 
 //    public File getImage(long id) {
 //        return images.get(id);
-//    }
+//    }todo
 //
 //    public void postImage(File image, long id) {
 //        images.put(id, image);

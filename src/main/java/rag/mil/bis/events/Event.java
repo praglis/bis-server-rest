@@ -12,7 +12,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
 
 @Data
 public class Event {
@@ -28,5 +28,5 @@ public class Event {
     private String description;
 
     @NotBlank
-    private XMLGregorianCalendar date;
+    private LocalDate date;
 }
