@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.stream.Collectors;
@@ -31,10 +32,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .collect(Collectors.joining("\n")), headers, status, request);
     }
 
-    @ExceptionHandler(value = {IdInconsistencyException.class})
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        logger.error(ex.getMessage());
+        return super.handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    @ExceptionHandler(value = {IdInconsistencyException.class, MethodArgumentTypeMismatchException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected String handleBadRequest(IdInconsistencyException ex) {
+    protected String handleBadRequest(RuntimeException ex) {
         return ex.getMessage();
     }
 
@@ -44,5 +51,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected String handleBadRequest(PdfGenerationException ex) {
         return ex.getMessage();
     }
+
+
 }
 

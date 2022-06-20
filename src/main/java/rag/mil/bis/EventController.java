@@ -1,7 +1,9 @@
 package rag.mil.bis;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rag.mil.bis.exception.IdInconsistencyException;
 import rag.mil.bis.model.EventDto;
@@ -17,7 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:8080", allowCredentials = "true")
 @RequestMapping("/api/events")
+@Validated
 public class EventController {
+    private static final String ID_SHOULD_NOT_BE_NEGATIVE_MSG = "Id can't be negative number.";
     private final EventService eventService;
 
     @GetMapping
@@ -31,7 +35,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventDto getEvent(@PathVariable long id) {
+    public EventDto getEvent(@Range(message = ID_SHOULD_NOT_BE_NEGATIVE_MSG) @PathVariable long id) {
         return eventService.getEvent(id);
     }
 
@@ -46,7 +50,8 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public EventDto updateEvent(@PathVariable long id, @Valid @RequestBody EventDto event) {
+    public EventDto updateEvent(@Range(message = ID_SHOULD_NOT_BE_NEGATIVE_MSG) @PathVariable long id,
+                                @Valid @RequestBody EventDto event) {
         if (id != event.getId())
             throw new IdInconsistencyException(id, event.getId());
 
@@ -54,7 +59,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEvent(@PathVariable long id) {
+    public void deleteEvent(@Range(message = ID_SHOULD_NOT_BE_NEGATIVE_MSG) @PathVariable long id) {
         eventService.deleteEvent(id);
     }
 

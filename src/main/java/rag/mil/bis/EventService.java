@@ -49,7 +49,8 @@ public class EventService {
     }
 
     public EventDto getEvent(long id) throws EventNotFoundException {
-        EventDto dEvent = events.stream().filter(event -> event.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
+        EventDto dEvent = findEvent(id);
+
         EventDto eventDto = new EventDto();
         eventDto.setDate(dEvent.getDate());
         eventDto.setId(dEvent.getId());
@@ -57,6 +58,13 @@ public class EventService {
         eventDto.setType(dEvent.getType());
         eventDto.setName(dEvent.getName());
         return eventDto;
+    }
+
+    private EventDto findEvent(long id) {
+        return events.stream()
+                .filter(event -> event.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new EventNotFoundException(id));
     }
 
     public List<EventDto> getEventsForDay(LocalDate day) {
@@ -76,7 +84,8 @@ public class EventService {
 
     public EventDto updateEvent(EventDto event) {
         long id = event.getId();
-        EventDto uEvent = events.stream().filter(e -> e.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
+        EventDto uEvent = findEvent(id);
+
         uEvent.setDate(event.getDate());
         uEvent.setDescription(event.getDescription());
         uEvent.setName(event.getName());
@@ -128,6 +137,4 @@ public class EventService {
             table.addCell(event.getDescription());
         }
     }
-
 }
-
