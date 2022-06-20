@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -38,7 +39,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
 
-    @ExceptionHandler(value = {IdInconsistencyException.class, MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler(value = {IdInconsistencyException.class, MethodArgumentTypeMismatchException.class, ConstraintViolationException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected String handleBadRequest(RuntimeException ex) {
