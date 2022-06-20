@@ -24,7 +24,7 @@ public class EventController {
     }
 
     @PostMapping
-    public Event createEvent(NewEventDto newEventDto) {
+    public Event createEvent(@Valid @RequestBody NewEventDto newEventDto) {
         return eventService.createEvent(newEventDto);
     }
 
@@ -44,7 +44,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public Event updateEvent(@PathVariable long id, @Valid Event event) {
+    public Event updateEvent(@PathVariable long id, @Valid @RequestBody Event event) {
         if (id != event.getId())
             throw new IdInconsistencyException(id, event.getId());
 
