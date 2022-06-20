@@ -1,4 +1,4 @@
-package rag.mil.bis.events;
+package rag.mil.bis;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -9,16 +9,17 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import rag.mil.bis.exception.EmptyDataException;
 import rag.mil.bis.exception.EventNotFoundException;
+import rag.mil.bis.exception.PdfGenerationException;
+import rag.mil.bis.model.EventDto;
+import rag.mil.bis.model.NewEventDto;
+import rag.mil.bis.model.YearWeekDto;
 
 import javax.jws.WebService;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -29,16 +30,15 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class EventService {
-    private final List<Event> events = new ArrayList<>();
-    private final HashMap<Long, File> images = new HashMap<>();
+    private final List<EventDto> events = new ArrayList<>();
     private int idSequence = 1;
 
-    public List<Event> getEvents() {
+    public List<EventDto> getEvents() {
         return events;
     }
 
-    public Event createEvent(NewEventDto eventToCreate) {
-        Event event = new Event();
+    public EventDto createEvent(NewEventDto eventToCreate) {
+        EventDto event = new EventDto();
         event.setId(idSequence++);
         event.setType(eventToCreate.getType());
         event.setName(eventToCreate.getName());
@@ -48,28 +48,22 @@ public class EventService {
         return event;
     }
 
-    public DetailedEvent getEvent(long id) throws EventNotFoundException {
-        Event dEvent = events.stream().filter(event -> event.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
-        DetailedEvent detailedEvent = new DetailedEvent();
-        detailedEvent.setDate(dEvent.getDate());
-        detailedEvent.setId(dEvent.getId());
-        detailedEvent.setDescription(dEvent.getDescription());
-        detailedEvent.setType(dEvent.getType());
-        detailedEvent.setName(dEvent.getName());
-        LocalDate date = dEvent.getDate();
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        short weekNumber = (short) date.get(weekFields.weekOfWeekBasedYear());
-        detailedEvent.setWeek(weekNumber);
-        detailedEvent.setYear(dEvent.getDate().getYear());
-        detailedEvent.setMonth((short) dEvent.getDate().getMonth().getValue());
-        return detailedEvent;
+    public EventDto getEvent(long id) throws EventNotFoundException {
+        EventDto dEvent = events.stream().filter(event -> event.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
+        EventDto eventDto = new EventDto();
+        eventDto.setDate(dEvent.getDate());
+        eventDto.setId(dEvent.getId());
+        eventDto.setDescription(dEvent.getDescription());
+        eventDto.setType(dEvent.getType());
+        eventDto.setName(dEvent.getName());
+        return eventDto;
     }
 
-    public List<Event> getEventsForDay(LocalDate day) {
+    public List<EventDto> getEventsForDay(LocalDate day) {
         return events.stream().filter(event -> event.getDate().isEqual(day)).collect(Collectors.toList());
     }
 
-    public List<Event> getEventsForWeek(YearWeek yearWeek) {
+    public List<EventDto> getEventsForWeek(YearWeekDto yearWeek) {
         return events.stream()
                 .filter(event -> {
                     LocalDate date = event.getDate();
@@ -80,12 +74,9 @@ public class EventService {
                 }).collect(Collectors.toList());
     }
 
-    public Event updateEvent(Event event) throws EmptyDataException, EventNotFoundException {
+    public EventDto updateEvent(EventDto event) {
         long id = event.getId();
-        if (id == 0) {
-            throw new EmptyDataException("Id");
-        }
-        Event uEvent = events.stream().filter(e -> e.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
+        EventDto uEvent = events.stream().filter(e -> e.getId() == id).findFirst().orElseThrow(EventNotFoundException::new);
         uEvent.setDate(event.getDate());
         uEvent.setDescription(event.getDescription());
         uEvent.setName(event.getName());
@@ -95,22 +86,25 @@ public class EventService {
 
     public void deleteEvent(long id) {
         events.removeIf(event -> event.getId() == id);
-        images.remove(id);
     }
 
-    public byte[] generatePdf() throws DocumentException {
+    public byte[] generatePdf() {
         Document document = new Document();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PdfWriter.getInstance(document, baos);
+        try {
+            PdfWriter.getInstance(document, baos);
 
-        document.open();
+            document.open();
 
-        PdfPTable table = new PdfPTable(5);
-        addTableHeader(table);
-        addRows(table);
+            PdfPTable table = new PdfPTable(5);
+            addTableHeader(table);
+            addRows(table);
 
-        document.add(table);
-        document.close();
+            document.add(table);
+            document.close();
+        } catch (DocumentException e) {
+            throw new PdfGenerationException(e);
+        }
         return baos.toByteArray();
     }
 
@@ -126,7 +120,7 @@ public class EventService {
     }
 
     private void addRows(PdfPTable table) {
-        for (Event event : events) {
+        for (EventDto event : events) {
             table.addCell(event.getId() + "");
             table.addCell(event.getName());
             table.addCell(event.getType());
@@ -135,12 +129,5 @@ public class EventService {
         }
     }
 
-//    public File getImage(long id) {
-//        return images.get(id);
-//    }todo
-//
-//    public void postImage(File image, long id) {
-//        images.put(id, image);
-//    }
 }
 

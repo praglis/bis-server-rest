@@ -6,7 +6,7 @@
 //
 
 
-package rag.mil.bis.events;
+package rag.mil.bis.model;
 
 import lombok.Data;
 

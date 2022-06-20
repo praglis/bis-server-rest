@@ -1,6 +1,6 @@
 package rag.mil.bis.exception;
 
-public class EventNotFoundException extends RuntimeException {
+public class EventNotFoundException extends BisServerRestException {
     public EventNotFoundException() {
         super("No such event");
     }

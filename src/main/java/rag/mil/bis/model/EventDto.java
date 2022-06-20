@@ -6,17 +6,18 @@
 //
 
 
-package rag.mil.bis.events;
+package rag.mil.bis.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
 @Data
-public class DetailedEvent {
+public class EventDto {
+
     @PositiveOrZero
     private long id;
 
@@ -27,16 +28,9 @@ public class DetailedEvent {
 
     private String description;
 
-    @NotNull
+    @NotBlank
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    @NotNull
-    private short week;
-
-    @NotNull
-    private short month;
-
-    @NotNull
-    private int year;
-
+    private String photo;
 }

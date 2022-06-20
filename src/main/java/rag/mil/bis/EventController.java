@@ -1,10 +1,11 @@
-package rag.mil.bis.events;
+package rag.mil.bis;
 
-import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import rag.mil.bis.exception.EventNotFoundException;
 import rag.mil.bis.exception.IdInconsistencyException;
+import rag.mil.bis.model.EventDto;
+import rag.mil.bis.model.NewEventDto;
+import rag.mil.bis.model.YearWeekDto;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -19,32 +20,32 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public List<Event> getEvents() {
+    public List<EventDto> getEvents() {
         return eventService.getEvents();
     }
 
     @PostMapping
-    public Event createEvent(@Valid @RequestBody NewEventDto newEventDto) {
+    public EventDto createEvent(@Valid @RequestBody NewEventDto newEventDto) {
         return eventService.createEvent(newEventDto);
     }
 
     @GetMapping("/{id}")
-    public DetailedEvent getEvent(@PathVariable long id) throws EventNotFoundException {
+    public EventDto getEvent(@PathVariable long id) {
         return eventService.getEvent(id);
     }
 
     @GetMapping("/day/{day}")
-    public List<Event> getEventsForDay(@PathVariable LocalDate day) {
+    public List<EventDto> getEventsForDay(@PathVariable LocalDate day) {
         return eventService.getEventsForDay(day);
     }
 
-    @GetMapping("/year/{yearWeekDto}")
-    public List<Event> getEventsForWeek(@PathVariable YearWeek yearWeekDto) {
-        return eventService.getEventsForWeek(yearWeekDto);
+    @GetMapping("/year/{year}/week/{week}")
+    public List<EventDto> getEventsForWeek(@PathVariable short year, @PathVariable short week) {
+        return eventService.getEventsForWeek(new YearWeekDto(week, year));
     }
 
     @PutMapping("/{id}")
-    public Event updateEvent(@PathVariable long id, @Valid @RequestBody Event event) {
+    public EventDto updateEvent(@PathVariable long id, @Valid @RequestBody EventDto event) {
         if (id != event.getId())
             throw new IdInconsistencyException(id, event.getId());
 
@@ -57,7 +58,7 @@ public class EventController {
     }
 
     @GetMapping("/pdf")
-    public byte[] generatePdf() throws DocumentException {
+    public byte[] generatePdf() {
         return eventService.generatePdf();
     }
 }
