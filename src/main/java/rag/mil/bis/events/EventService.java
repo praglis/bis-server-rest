@@ -15,7 +15,6 @@ import rag.mil.bis.exception.EventNotFoundException;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.time.LocalDate;
@@ -40,7 +39,7 @@ public class EventService {
         return events;
     }
 
-    public Event createEvent(EventToCreate eventToCreate) {
+    public Event createEvent(NewEventDto eventToCreate) {
         Event event = new Event();
         event.setId(idSequence++);
         eventToCreate.getDate().setTimezone(DatatypeConstants.FIELD_UNDEFINED);
@@ -147,12 +146,12 @@ public class EventService {
         }
     }
 
-    public File getImage(long id) {
-        return images.get(id);
-    }
-
-    public void postImage(File image, long id) {
-        images.put(id, image);
-    }
+//    public File getImage(long id) {
+//        return images.get(id);
+//    }
+//
+//    public void postImage(File image, long id) {
+//        images.put(id, image);
+//    }
 }
 

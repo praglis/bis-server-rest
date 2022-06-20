@@ -11,22 +11,18 @@ package rag.mil.bis.events;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.NotNull;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 @Data
-public class Event {
-
-    @PositiveOrZero
-    private long id;
+public class NewEventDto {
 
     @NotBlank
     private String name;
 
     private String type;
-
     private String description;
 
-    @NotBlank
+    @NotNull
     private XMLGregorianCalendar date;
 }

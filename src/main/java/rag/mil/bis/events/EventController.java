@@ -2,58 +2,62 @@ package rag.mil.bis.events;
 
 import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import rag.mil.bis.exception.EmptyDataException;
+import org.springframework.web.bind.annotation.*;
 import rag.mil.bis.exception.EventNotFoundException;
+import rag.mil.bis.exception.IdInconsistencyException;
 
-import javax.jws.WebService;
+import javax.validation.Valid;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 
 
 @Controller
-@WebService(endpointInterface = "rag.mil.bis.events.EventClient")
 @RequiredArgsConstructor
-public class EventController implements EventClient {
-    @Autowired
-    private EventService eventService;
+@CrossOrigin(origins = "http://localhost:8080", allowCredentials = "true")
+@RequestMapping("/api/events")
+public class EventController {
+    private final EventService eventService;
 
+    @GetMapping
     public List<Event> getEvents() {
         return eventService.getEvents();
     }
 
-    @Override
-    public Event createEvent(EventToCreate event) {
-        return eventService.createEvent(event);
+    @PostMapping
+    public Event createEvent(@Valid NewEventDto newEventDto) {
+        return eventService.createEvent(newEventDto);
     }
 
-    @Override
-    public DetailedEvent getEvent(long id) throws EventNotFoundException {
+    @GetMapping("/{id}")
+    public DetailedEvent getEvent(@RequestParam long id) throws EventNotFoundException {
         return eventService.getEvent(id);
     }
 
-    @Override
-    public List<Event> getEventsForDay(XMLGregorianCalendar day) {
+    @GetMapping("/day/{day}")
+    public List<Event> getEventsForDay(@PathVariable XMLGregorianCalendar day) {
         return eventService.getEventsForDay(day);
     }
 
-    @Override
-    public List<Event> getEventsForWeek(YearWeek yearWeekDto) {
+    @GetMapping("/year/{yearWeekDto}")
+    public List<Event> getEventsForWeek(@PathVariable YearWeek yearWeekDto) {
         return eventService.getEventsForWeek(yearWeekDto);
     }
 
-    @Override
-    public Event updateEvent(Event event) throws EventNotFoundException, EmptyDataException {
+    @PutMapping("/{id}")
+    public Event updateEvent(@PathVariable long id, @Valid Event event) {
+        if (id != event.getId())
+            throw new IdInconsistencyException(id, event.getId());
+
         return eventService.updateEvent(event);
     }
 
-    @Override
-    public void deleteEvent(long id) {
+    @DeleteMapping("/{id}")
+    public void deleteEvent(@PathVariable long id) {
         eventService.deleteEvent(id);
     }
 
-    @Override
+    @GetMapping("/pdf")
     public byte[] generatePdf() throws DocumentException {
         return eventService.generatePdf();
     }
