@@ -48,9 +48,8 @@ public class HttpInterceptor implements Filter, WebMvcConfigurer {
         setResponseHeaders(response);
         logger.info(String.format("Request Method: %s", request.getMethod()));
 
-        checkSecurityHeaders(((HttpServletRequest) req));
-
         if (!(request.getMethod().equalsIgnoreCase("OPTIONS"))) {
+            checkSecurityHeaders(((HttpServletRequest) req));
             try {
                 chain.doFilter(req, res);
             } catch (Exception e) {
@@ -85,16 +84,19 @@ public class HttpInterceptor implements Filter, WebMvcConfigurer {
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST,GET,DELETE,PUT");
         response.setHeader(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        //response.setHeader(ACCESS_CONTROL_RESPONSE_HEADERS, "Authorization");
+
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, ACCESS_CONTROL_RESPONSE_HEADERS + "Authorization, content-type," +
                 "USERID" + "ROLE" +
                 "access-control-request-headers,access-control-request-method,accept,origin,authorization,x-requested-with,responseType,observe");
     }
 
     private void setResponseHeadersForOptionsMethod(HttpServletResponse response) {
-        response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:8080");
         response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, PUT, GET, OPTIONS, DELETE");
         response.setHeader(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
-        response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With,observe");
+        response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, observe, " + USERNAME_HEADER + ", " + PASSWORD_HEADER);
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader(ACCESS_CONTROL_RESPONSE_HEADERS, "Authorization");
         response.addHeader(ACCESS_CONTROL_RESPONSE_HEADERS, "responseType");
