@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import rag.mil.bis.exceptions.security.BadSecurityHeaderException;
 import rag.mil.bis.exceptions.security.MissingSecurityHeaderException;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Configuration
-@EnableWebMvc
 public class HttpInterceptor implements Filter, WebMvcConfigurer {
     public static final String USERNAME_HEADER = "WS-Security-Username";
     public static final String BIS_CLIENT_USERNAME = "BIS-client";
@@ -29,6 +27,7 @@ public class HttpInterceptor implements Filter, WebMvcConfigurer {
 
     private static final String ACCESS_CONTROL_RESPONSE_HEADERS = "Access-Control-Expose-Headers";
     private static final Logger logger = LoggerFactory.getLogger(HttpInterceptor.class);
+    private static final CharSequence SWAGGER_URI = "swagger";
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -48,8 +47,6 @@ public class HttpInterceptor implements Filter, WebMvcConfigurer {
         setResponseHeaders(response);
         logger.info(String.format("Request Method: %s", request.getMethod()));
 
-        checkSecurityHeaders(((HttpServletRequest) req));
-
         if (!(request.getMethod().equalsIgnoreCase("OPTIONS"))) {
             try {
                 chain.doFilter(req, res);
@@ -60,6 +57,8 @@ public class HttpInterceptor implements Filter, WebMvcConfigurer {
             logger.info("Pre-flight");
             setResponseHeadersForOptionsMethod(response);
         }
+        if (!((HttpServletRequest) req).getRequestURI().contains(SWAGGER_URI))
+            checkSecurityHeaders(((HttpServletRequest) req));
         logHeaders("HTTP request headers after handling: ", request, "HTTP response headers after handling: ", response, "--- Completed handling HTTP operation ---");
     }
 
