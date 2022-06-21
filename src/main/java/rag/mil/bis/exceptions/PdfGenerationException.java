@@ -1,4 +1,4 @@
-package rag.mil.bis.exception;
+package rag.mil.bis.exceptions;
 
 import com.itextpdf.text.DocumentException;
 

@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import rag.mil.bis.exception.IdInconsistencyException;
+import rag.mil.bis.exceptions.IdInconsistencyException;
 import rag.mil.bis.model.EventDto;
 import rag.mil.bis.model.NewEventDto;
 import rag.mil.bis.model.YearWeekDto;

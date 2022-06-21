@@ -1,4 +1,4 @@
-package rag.mil.bis.exception;
+package rag.mil.bis.exceptions;
 
 public class IdInconsistencyException extends BisServerRestException {
     public IdInconsistencyException(long bodyId, long pathId) {
