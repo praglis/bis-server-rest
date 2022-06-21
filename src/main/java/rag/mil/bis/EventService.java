@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 import rag.mil.bis.exceptions.EventNotFoundException;
 import rag.mil.bis.exceptions.PdfGenerationException;
@@ -24,6 +25,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @WebService
@@ -45,6 +49,14 @@ public class EventService {
         event.setDescription(eventToCreate.getDescription());
         event.setDate(eventToCreate.getDate());
         event.setPhoto(eventToCreate.getPhoto());
+        Link self = linkTo(EventController.class).slash(event.getId()).withSelfRel();
+        Link editEvent = linkTo(methodOn(EventController.class)
+                .updateEvent(event.getId(), event)).withRel("updateEvent");
+        Link deleteEvent = linkTo(methodOn(EventController.class)
+                .deleteEvent(event.getId())).withRel("deleteEvent");
+        Link allEvents = linkTo(methodOn(EventController.class)
+                .getEvents()).withRel("allEvents");
+        event.add(self, editEvent, deleteEvent, allEvents);
         events.add(event);
         return event;
     }
@@ -59,6 +71,14 @@ public class EventService {
         eventDto.setType(dEvent.getType());
         eventDto.setName(dEvent.getName());
         eventDto.setPhoto(dEvent.getPhoto());
+        Link self = linkTo(EventController.class).slash(eventDto.getId()).withSelfRel();
+        Link eventsLink = linkTo(methodOn(EventController.class)
+                .getEvents()).withRel("allEvents");
+        Link editEvent = linkTo(methodOn(EventController.class)
+                .updateEvent(eventDto.getId(), eventDto)).withRel("updateEvent");
+        Link deleteEvent = linkTo(methodOn(EventController.class)
+                .deleteEvent(eventDto.getId())).withRel("deleteEvent");
+        eventDto.add(self, eventsLink, editEvent, deleteEvent);
         return eventDto;
     }
 
@@ -93,12 +113,23 @@ public class EventService {
         uEvent.setName(event.getName());
         uEvent.setType(event.getType());
         uEvent.setPhoto(event.getPhoto());
+        Link self = linkTo(EventController.class).slash(event.getId()).withSelfRel();
+        Link allEvents = linkTo(methodOn(EventController.class)
+                .getEvents()).withRel("allEvents");
+        Link deleteEvent = linkTo(methodOn(EventController.class)
+                .deleteEvent(event.getId())).withRel("deleteEvent");
+        Link editEvent = linkTo(methodOn(EventController.class)
+                .updateEvent(event.getId(), event)).withRel("updateEvent");
+        event.add(self, allEvents, deleteEvent, editEvent);
         return event;
     }
 
     public EventDto deleteEvent(long id) {
         EventDto eventToDelete = findEvent(id);
         events.remove(eventToDelete);
+        Link allEvents = linkTo(methodOn(EventController.class)
+                .getEvents()).withRel("allEvents");
+        eventToDelete.add(allEvents);
         return eventToDelete;
     }
 

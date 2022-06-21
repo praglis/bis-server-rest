@@ -10,6 +10,7 @@ package rag.mil.bis.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
 @Data
-public class EventDto {
+public class EventDto extends RepresentationModel<EventDto> {
 
     @PositiveOrZero
     private long id;
